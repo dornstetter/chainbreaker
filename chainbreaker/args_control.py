@@ -69,6 +69,7 @@ def setup_argsparse():
     unlock_args.add_argument('--password', help='Unlock the keychain with a password, provided on the terminal.'
                                                 'Caution: This is insecure and you should likely use'
                                                 '--password-prompt instead')
+    unlock_args.add_argument('--password-file', help='Unlock the keychain with a binary password from a file')
     unlock_args.add_argument('--key-prompt', '-k', help='Prompt for a key to use in unlocking the keychain',
                              action='store_const', dest='key_prompt', const=True)
     unlock_args.add_argument('--key', help='Unlock the keychain with a key, provided via argument.'
@@ -103,6 +104,7 @@ def setup_argsparse():
         password_prompt=False,
         key_prompt=False,
         password=None,
+        password_file=None,
         key=None,
         unlock_file=None,
     )
@@ -146,6 +148,10 @@ def args_prompt_input(args):
 
     if args.key_prompt:
         args.key = getpass.getpass('Unlock Key: ')
+
+    if args.password_file:
+        with open(args.password_file, 'rb') as f:
+            args.password = f.read()
 
     return args
 

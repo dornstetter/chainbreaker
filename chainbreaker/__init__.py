@@ -385,7 +385,9 @@ class Chainbreaker(object):
 
     # ## Documents : http://www.opensource.apple.com/source/securityd/securityd-55137.1/doc/BLOBFORMAT
     def _generate_master_key(self, pw):
-        return pbkdf2_hmac('sha1', str.encode(pw), bytearray(self.dbblob.Salt), 1000, dklen=Chainbreaker.KEYLEN)
+        if isinstance(pw, str):
+            pw = str.encode(pw)
+        return pbkdf2_hmac('sha1', pw, bytearray(self.dbblob.Salt), 1000, dklen=Chainbreaker.KEYLEN)
 
     # ## find DBBlob and extract Wrapping key
     def _find_wrapping_key(self, master):
